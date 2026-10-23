@@ -13,48 +13,65 @@ def list_of_png(pattern):
     It's somehow redundant to list of xvg in
     create_image_from_xvg
     '''
-    pattern = re.sub('_?[0-9]*(\.png)?$','',pattern)
-    #print(pattern)
+    pattern = re.sub(r'_?[0-9]*(\.png)?$','',pattern)
     print('I\'m using pattern for PNG files: ', pattern)
     allfiles = os.listdir()
-    png_files = list(filter(lambda fn: (pattern in fn) and fn.endswith('.png'),
+    png_files = list(filter(lambda fn: fn.startswith(pattern) and fn.endswith('.png'),
                             allfiles))
-    #print(rdf_files)
-    #print(png_files)
+    # sort by the numbers in the names, so _B500 comes before _B1000
+    png_files.sort(key = lambda fn: [int(part) if part.isdigit() else part
+                                     for part in re.split(r'(\d+)', fn)])
     return png_files
     
 
     
-def create_video(png_pattern, vid_name):
-    '''
-    Creates a video from png files
+def create_video(png_pattern, vid_name = '', fps = 1):
+    '''(str, str, float) -> str
+    Creates a video from png files matching the pattern, one frame
+    per file. If vid_name is empty, <pattern>_film.avi is used.
+    Returns the video name.
     '''
 
     images = list_of_png(png_pattern)
+    if not images:
+        raise FileNotFoundError('No PNG files match the pattern: ' + png_pattern)
     print(images)
-    vid_name = images[0][:-3] + '_film.avi'
+    if not vid_name:
+        vid_name = re.sub(r'\.png$', '', png_pattern) + '_film'
+    if not vid_name.lower().endswith('.avi'):
+        vid_name += '.avi'
 
     frame = cv2.imread(images[0])
     height, width, layers = frame.shape
 
-    video = cv2.VideoWriter(vid_name, 0, 1, (width, height))
+    video = cv2.VideoWriter(vid_name, cv2.VideoWriter_fourcc(*'MJPG'),
+                            fps, (width, height))
+    if not video.isOpened():
+        raise RuntimeError('Could not create the video file: ' + vid_name)
 
     for img in images:
-        video.write(cv2.imread(img))
+        frame = cv2.imread(img)
+        if frame is None:
+            raise ValueError('Could not read image: ' + img)
+        # all frames must have the size of the first one
+        if frame.shape[:2] != (height, width):
+            frame = cv2.resize(frame, (width, height))
+        video.write(frame)
 
-    cv2.destroyAllWindows()
     video.release()
+    return vid_name
 
 def run_function():
     """ Take input from a user and run the module """
 
     print("Give me a pattern for PNG images. Beginning of the name is sufficient, png extension isn't required:")
-    png_name = input()
+    png_name = input().strip()
 
-    print("Give me the name of a video you want to be created .AVI will be added at the end:")
-    #vid_name = input()
+    print("Give me the name of a video you want to be created .AVI will be added at the end (Enter = automatic name):")
+    vid_name = input().strip()
 
-    create_video(png_name, vid_name)
+    vid_name = create_video(png_name, vid_name)
+    print('Video saved as: ' + vid_name)
 
 
 
