@@ -5,13 +5,13 @@ You can run this script with IDLE (open with IDLE, hit F5 and proceed as further
 or interactive python3 session (python3 -i angle_from_positions.py)
 After opening run script as:
 
->>> run_scr('file_name.xvg', number_of_dimensions, number_of_molecules)
+>>> run_scr('file_name.xvg', number_of_dimensions)
 
-For example the example below works with data in
-'lut_ver_vector_C1320.xvg', 3-dimensions (xyz) and assumes there are
-data for 6 molecules in the following columns. So 19 columns
-alltogether (column 0 for time and 3x6=18 columns with data):
-run_scr('lut_ver_vector_C1320.xvg', 3, 6)
+Columns: time, then for each molecule x y z of atom 1 followed by
+x y z of atom 2. The number of molecules is found from the number
+of columns. For example vec_test.xvg in tests: 3 dimensions,
+6 molecules, 37 columns (1 + 6x2x3):
+run_scr('vec_test.xvg', 3)
 
 '''
 
@@ -117,15 +117,12 @@ def coords_to_vectors(infile, dimensions, no_of_mols):
     '''(str,int,int)
     read input file line by line and change coordinates to vectors
     '''
-    #no_o_mols = 6
     database_of_mols = {x:[] for x in range(0,no_of_mols+1)}
 
     
     for line in infile:
         if line.strip() and line[0] not in ['#', '@']:
-            #actually I don't want to print vecotrs to files
-            #print(compose_newline(line, dimensions), file = outfile)
-            #I want to move vectors to seperate molecules:
+            #move vectors to seperate molecules:
             newline = compose_newline(line, dimensions)
             update_database(database_of_mols, newline)
 
@@ -136,7 +133,6 @@ def update_database(database, newline):
     adds items from a line to list of vectors for each dictionary
     '''
     for i in range(0,len(newline)):
-        #print(database[i],newline[i])
         database[i].append(newline[i]) 
 
 
@@ -145,21 +141,16 @@ def compose_newline(line, dimensions):
     given a line with data makes newline with time and vecotrs
     '''
     oldline = list(map(float, line.split()))
-    #print(oldline)
     newline = [oldline[0]]
     coord = 1
     while coord < len(oldline):
         xyz1 = oldline[coord : coord+dimensions]
-        #print(xyz1)
         coord += dimensions
         xyz2 = oldline[coord : coord+dimensions]
-        #print(xyz2)
         coord += dimensions
         vec = calculate_vector(xyz1, xyz2)
-        #print(vec)
         newline.append(vec)
 
-    #print(newline)
     return newline
 
 
@@ -196,9 +187,7 @@ def normalize_1molecule(list_of_vec):
     ortogonal to z axis - first two coorinates.
     '''
     normalized = []
-    #print(list_of_vec)
     for ele in list_of_vec:
-        #print(ele[0:2])
         normalized.append(normalize_vector(ele[0:2]))
 
     return normalized
@@ -227,7 +216,6 @@ def angle_mol_library(norm_mol_lib):
             angle_lib[key] = angle_evolution(norm_mol_lib[key])
         else:
             angle_lib[key] = norm_mol_lib[key]
-    #print(angle_lib)
     return angle_lib
     
 

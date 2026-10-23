@@ -79,20 +79,4 @@ if __name__ == '__main__':
     run_function()
 
 
-#thank you stackoverflow :)
-"""
-image_folder = 'images'
-video_name = 'video.avi'
-
-images = [img for img in os.listdir(image_folder) if img.endswith(".png")]
-frame = cv2.imread(os.path.join(image_folder, images[0]))
-height, width, layers = frame.shape
-
-video = cv2.VideoWriter(video_name, 0, 1, (width,height))
-
-for image in images:
-    video.write(cv2.imread(os.path.join(image_folder, image)))
-
-cv2.destroyAllWindows()
-video.release()
-"""
+#create_video is based on a stackoverflow example - thank you stackoverflow :)

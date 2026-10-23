@@ -57,7 +57,6 @@ def print_angles(data, filename):
     return pngs
 
 
-#print_angles(read_file('angles_example.txt'))
 
 def run_module():
     print('Give a filename to create graphs: ')

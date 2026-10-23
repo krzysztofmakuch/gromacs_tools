@@ -10,29 +10,6 @@ def read_file(filename):
     reads the file into numpy array and converts to dataframe
     with first column as index '''
 
-    '''
-    #how many cols are there?
-    with open(filename, 'r') as temp_f:
-        read_1st = temp_f.readline()
-    firstline = read_1st.split()
-
-    #handling corrupted files:
-    len_1st = len(firstline)
-    if len_1st == 0:
-        print('empty file!')
-        return 0
-    elif len_1st == 1:
-        print('corrupted data! file contains only 1 column!')
-        return 0
-    '''
-
-    #column names:
-     
-    '''
-    name = lambda x: "rdf%02d" %(x)
-    for count, e in enumerate(firstline[1:]):
-        col_names.append(name(count))
-    '''
     #read data:
     np_data = np.loadtxt(filename, comments = ['#','@'])
     np_data = np_data.astype(float)
@@ -42,6 +19,7 @@ def read_file(filename):
 
     num_of_cols = np_data.shape[1]
 
+    #column names:
     col_names = ['distance']
     if num_of_cols > 2:
         for i in range(1,num_of_cols):
@@ -49,22 +27,9 @@ def read_file(filename):
     else:
         col_names.append('RDF')
 
-    #print(np_data)
-    #print(np_data.shape)
-    #print(col_names)
-    #print(np_data[0:,0])
-    '''
-    df = pd.read_csv(filename, engine = 'python',
-                     sep = "\t|\s",comment = ['#','@'],
-                     names = col_names,
-                     index_col=0)
-    '''
-
     df = pd.DataFrame(data = np_data,
                       columns = col_names)
-    #print(df.head())
     df = df.set_index(col_names[0])
-    #print(df.head())
 
     return df
 
