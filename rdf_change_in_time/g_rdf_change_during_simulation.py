@@ -7,7 +7,7 @@ from . import create_movie_from_png
 
 def traj_run(XTC, TPR, index, XVG, begin, end, dt, atom, sel='SOL', gmx='gmx'):
     """(str,str,str,str,int,int,int,str,str,str) -> list
-    Function runs subsequent SOLVATATION gmx rdf. The idea is
+    Function runs subsequent SOLVATION gmx rdf. The idea is
     to get RDFs OF WATER against some atoms for time evolution
     during some biochemical processess. Example of use:
     traj_run('LUT_BCL60_md_1ps_plus15_50fs.xtc','LUT_BCL60_md_1ps_plus15_50fs.tpr','index_RDF_27022.ndx', 'otuput.xvg',
@@ -100,7 +100,7 @@ but errors may show up")
 
 
 def run_rdf_change():
-    print('This program calculates solvatation RDF.')
+    print('This program calculates solvation RDF.')
     print('   XTC or TRR trajectory: ')
     XTC = input()
 
@@ -123,7 +123,7 @@ extension. Don\'t add numbering: ')
     print('   Single RDF time: ')
     dt = input()
 
-    print('   Group to calculate solvatation RDF for: ')
+    print('   Group to calculate solvation RDF for: ')
     atom = input() 
 
     # all output files go to the folder of the trajectory

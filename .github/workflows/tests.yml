@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          path: gromacs_tools        # katalog musi się nazywać jak paczka
+          path: gromacs_tools
 
       - uses: actions/setup-python@v5
         with:
