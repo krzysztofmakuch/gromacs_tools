@@ -1,4 +1,5 @@
 # gromacs_tools
+![tests](https://github.com/krzysztofmakuch/gromacs_tools/actions/workflows/tests.yml/badge.svg)
 
 Small command-line tools for analysing output of the
 [GROMACS](https://www.gromacs.org/) molecular dynamics package.
@@ -91,7 +92,7 @@ Run from `tests/rdf_change_in_time` (needs `gmx`):
 
 ```
 1
-This program calculates solvatation RDF.
+This program calculates solvation RDF.
    XTC or TRR trajectory:
 LUT_BCL30_100ps.xtc
    TPR file:
