@@ -1,0 +1,26 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: gromacs_tools        # katalog musi się nazywać jak paczka
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: gromacs_tools/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r gromacs_tools/requirements.txt pytest
+
+      - name: Run tests
+        run: pytest -v gromacs_tools/tests
