@@ -1,9 +1,12 @@
 '''
-version 0.1
-requires python3 and numpy
-You can run this script with IDLE (open with IDLE, hit F5 and proceed as further descibed),
-or interactive python3 session (python3 -i angle_from_positions.py)
-After opening run script as:
+Converts atom positions from a GROMACS .xvg file into the angle between
+each molecule's vector (atom 1 - atom 2) and the X axis, using x and y only.
+
+Run as a script and answer the prompts:
+
+    python angle_from_positions_v3.py
+
+or from an interactive session (python -i angle_from_positions_v3.py):
 
 >>> run_scr('file_name.xvg', number_of_dimensions)
 
@@ -13,18 +16,13 @@ of columns. For example vec_test.xvg in tests: 3 dimensions,
 6 molecules, 37 columns (1 + 6x2x3):
 run_scr('vec_test.xvg', 3)
 
+For each molecule N it writes <name>_vec_out_N.xvg,
+<name>_vec_norm_out_N.xvg and <name>_angle_out_N.xvg.
+
 '''
 
 import numpy as np
-'''
-if (__name__ == '__main__'):
-    import sys
-    if len(sys.argv) == 4:
-        run_scr(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))
-    else:
-        print('You can run this script as: \n\
-./angle_from_positions.py filename number_of_dimensions number_of_mols\n')
-'''     
+
 
 def run_scr(file, dim):
     '''(str, int) -> list

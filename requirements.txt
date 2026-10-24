@@ -2,8 +2,4 @@
 matplotlib~=3.7.2
 pandas~=2.0.3
 numpy~=1.25.2
-
-
-setuptools~=60.2.0
 opencv-python
-pytest~=8.3
