@@ -76,13 +76,15 @@ def list_of_xvg(pattern):
     '''
     pattern = re.sub(r'_?[0-9]*(\.xvg)?$','',pattern)
     print('I\'m using pattern for XVG files: ', pattern)
-    allfiles = os.listdir()
-    rdf_files = list(filter(lambda fn: fn.startswith(pattern) and fn.endswith('.xvg'),
+    # search in the folder given in the pattern, not the current one
+    folder, base = os.path.split(pattern)
+    allfiles = os.listdir(folder or '.')
+    rdf_files = list(filter(lambda fn: fn.startswith(base) and fn.endswith('.xvg'),
                             allfiles))
     rdf_files.sort(key = lambda fn: [int(part) if part.isdigit() else part
                                      for part in re.split(r'(\d+)', fn)])
 
-    return rdf_files
+    return [os.path.join(folder, fn) for fn in rdf_files]
 
 
 
@@ -111,7 +113,7 @@ def line_graphs(xvg, xtit = 'distance', ytit = 'RDF', maxrdf = None,
     for file, data in zip(xvg_files, all_data):
         print_line_graph(data, name_png(file), col_title = col_title,
                          xlabel = xtit, ylabel = ytit,
-                         title = file[:-4], maxrdf = maxrdf)
+                         title = os.path.basename(file)[:-4], maxrdf = maxrdf)
         pngs.append(name_png(file))
     return pngs
 

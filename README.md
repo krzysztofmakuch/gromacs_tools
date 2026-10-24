@@ -18,7 +18,7 @@ Available tools:
 Options 2, 4, 5 and 6 in the menu (MSD, xyz to volume, H-bonds) are not
 ready yet.
 
-![RDF of water around a group, one time window](tests/rdf_change_in_time/test_rdf_BCL_1235.png)
+![RDF of water around a group, one time window](tests/rdf_change_in_time/RDF_BCL30_B0_E20.png)
 
 *Example RDF for one time window. A series of these graphs becomes the
 frames of the movie.*
@@ -48,9 +48,11 @@ The tool uses package imports, so Python has to see the folder that
 **contains** `gromacs_tools`. Start it with `python -m gromacs_tools`,
 not `python gromacs_tools`.
 
-The tool reads and writes files in the current folder, so it is easiest
-to go to the folder with your simulation data and point `PYTHONPATH` at
-the parent folder of `gromacs_tools`:
+File names you type are read relative to the current folder. The RDF
+tool writes its output (XVG, PNG, movie) to the folder of the trajectory;
+the other tools write to the current folder. It is easiest to go to the
+folder with your simulation data and point `PYTHONPATH` at the parent
+folder of `gromacs_tools`:
 
 ```bash
 # Linux / macOS
@@ -91,32 +93,33 @@ Run from `tests/rdf_change_in_time` (needs `gmx`):
 1
 This program calculates solvatation RDF.
    XTC or TRR trajectory:
-LUT_BCL30_whole-skip1000.xtc
+LUT_BCL30_100ps.xtc
    TPR file:
-LUT_BCL30.tpr
+LUT_BCL30_100ps.tpr
    NDX file:
 index.ndx
    output XVG names. Give name for one file with xvg extension. Don't add numbering:
-rdf_BCL.xvg
+RDF_BCL30.xvg
    Begin RDF time:
-1500
+0
    End RDF time:
-1550
+100
    Single RDF time:
-5
+20
    Group to calculate solvatation RDF for:
-10
+BCL
 Do you want to create movie covering the RDF change - Y/N?
 Y
 ```
 
-The RDF is calculated against water (group `SOL`). Output:
+The RDF is calculated against water (group `SOL`). Output, written to the
+folder of the XTC file (unless the output name includes a folder):
 
-- `rdf_BCL_B1500_E1505.xvg`, `rdf_BCL_B1505_E1510.xvg`, … – one RDF per
-  time window
+- `RDF_BCL30_B0_E20.xvg`, `RDF_BCL30_B20_E40.xvg`, … `RDF_BCL30_B80_E100.xvg`
+  – one RDF per time window
 - the same names with `.png` – one graph per window, all with the same
   y-axis scale
-- `rdf_BCL_film.avi` – the graphs joined into a movie, one frame per window
+- `RDF_BCL30_film.avi` – the graphs joined into a movie, one frame per window
 
 ### Angle vs axis
 
