@@ -15,13 +15,15 @@ def list_of_png(pattern):
     '''
     pattern = re.sub(r'_?[0-9]*(\.png)?$','',pattern)
     print('I\'m using pattern for PNG files: ', pattern)
-    allfiles = os.listdir()
-    png_files = list(filter(lambda fn: fn.startswith(pattern) and fn.endswith('.png'),
+    # search in the folder given in the pattern, not the current one
+    folder, base = os.path.split(pattern)
+    allfiles = os.listdir(folder or '.')
+    png_files = list(filter(lambda fn: fn.startswith(base) and fn.endswith('.png'),
                             allfiles))
     # sort by the numbers in the names, so _B500 comes before _B1000
     png_files.sort(key = lambda fn: [int(part) if part.isdigit() else part
                                      for part in re.split(r'(\d+)', fn)])
-    return png_files
+    return [os.path.join(folder, fn) for fn in png_files]
     
 
     
@@ -40,6 +42,9 @@ def create_video(png_pattern, vid_name = '', fps = 1):
         vid_name = re.sub(r'\.png$', '', png_pattern) + '_film'
     if not vid_name.lower().endswith('.avi'):
         vid_name += '.avi'
+    # a bare video name goes next to the PNG files
+    if not os.path.dirname(vid_name):
+        vid_name = os.path.join(os.path.dirname(images[0]), vid_name)
 
     frame = cv2.imread(images[0])
     height, width, layers = frame.shape

@@ -1,3 +1,4 @@
+import os
 import shutil
 import subprocess
 from . import create_image_from_xvg
@@ -40,7 +41,7 @@ def traj_run(XTC, TPR, index, XVG, begin, end, dt, atom, sel='SOL', gmx='gmx'):
         print('Warning: end - begin is not a multiple of the RDF time, '
               'the last ' + str((end - begin) % dt) + ' ps are skipped.')
 
-    XVG = remove_xvg(XVG)
+    XVG = remove_xvg(next_to_trajectory(XVG, XTC))
     outputs = []
     # old version using subprocess.Popen, which is more complex and less safe
     #     while E <= end:
@@ -72,6 +73,16 @@ def traj_run(XTC, TPR, index, XVG, begin, end, dt, atom, sel='SOL', gmx='gmx'):
         E = E + dt
 
     return outputs
+
+
+def next_to_trajectory(filename, XTC):
+    """(str, str) -> str
+    Puts the output file in the folder of the trajectory, unless
+    the name already contains a folder.
+    """
+    if os.path.dirname(filename):
+        return filename
+    return os.path.join(os.path.dirname(XTC), filename)
 
 
 def remove_xvg(filename):
@@ -115,7 +126,9 @@ extension. Don\'t add numbering: ')
     print('   Group to calculate solvatation RDF for: ')
     atom = input() 
 
-    traj_run(XTC, TPR, index, XVG, begin, end, dt, atom)
+    # all output files go to the folder of the trajectory
+    XVG = next_to_trajectory(XVG.strip(), XTC.strip())
+    traj_run(XTC.strip(), TPR.strip(), index.strip(), XVG, begin, end, dt, atom)
 
     print('Do you want to create movie covering the RDF change - Y/N? ')
     movie = input().strip().upper()
