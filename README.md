@@ -146,9 +146,11 @@ Output, for each molecule `N`:
 
 ## Tests
 
-From the folder that contains `gromacs_tools`:
+Install the test dependencies (this also installs `requirements.txt`),
+then run the tests from the folder that contains `gromacs_tools`:
 
 ```bash
+pip install -r gromacs_tools/requirements-dev.txt
 python -m pytest gromacs_tools/tests
 ```
 
